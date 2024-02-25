@@ -1,0 +1,50 @@
+body, html {
+	height: 100%;
+	margin: 0;
+	font-family: 'Arial', sans-serif;
+	color: #fff;
+	background: #0b3d91;
+  }
+  
+  .space {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	background: linear-gradient(rgba(11, 61, 145, 0.95), rgba(11, 61, 145, 0.95)), url('space-background.jpg');
+	background-size: cover;
+	background-position: center;
+  }
+  
+  .spaceship-cockpit {
+	max-width: 600px;
+	text-align: center;
+	padding: 20px;
+	background: rgba(0, 0, 0, 0.8);
+	border-radius: 15px;
+  }
+  
+  h1 {
+	font-size: 100px;
+	margin: 0.5em 0;
+  }
+  
+  p {
+	font-size: 20px;
+  }
+  
+  a {
+	display: inline-block;
+	margin-top: 20px;
+	padding: 10px 20px;
+	background: #1c70ff;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 5px;
+	transition: background 0.3s ease;
+  }
+  
+  a:hover {
+	background: #0056b3;
+  }
+  
