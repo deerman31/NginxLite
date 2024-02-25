@@ -37,10 +37,6 @@ int	Server::Run() {
 		for (std::map<int, Connection>::iterator c = _connects.begin();
 		c != _connects.end(); ++c) {
 			if (c->second.getRevent() & POLLIN) {
-				// if (_listens.size() + _connects.size() > 250) {
-				// 	c->second.setConnectionStat(ERROR);
-				// 	c->second.setErrStatus(429);
-				// }
 				_inputSection(c->first, c->second);
 			} else if (c->second.getRevent() & POLLOUT) {
 				_Send(c->first, c->second);

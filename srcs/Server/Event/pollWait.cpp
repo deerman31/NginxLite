@@ -10,8 +10,8 @@ int	Server::_pollWait() {
 		}
 		errMessage("poll");
 		return -1;
-	} else if (ret == 0) {
-		std::cout << "Wait..." << std::endl;
+	//} else if (ret == 0) {
+		//std::cout << "Wait..." << std::endl;
 	}
 	this->_updateSocketStatus(ret);
 	return ret;
