@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <cstring>
 #include <iostream>
+#include <sstream>
 
 // recv()で格納するbufferのサイズ
 #define BUF_SIZE 1024
@@ -66,9 +67,10 @@ int	main() {
 
 	// クライアントから送られてくるリクエストメッセージを受け取り、bufに格納します。
 	// BUF_SIZE - 1 は末尾のナル文字分を確保するため
+	// recv()はクライアントから送られてくるメッセージを受信できる
 	ssize_t ret = recv(new_socket, buf, (BUF_SIZE - 1), 0);
 	if (ret < 0) {
-		perror("accept()");
+		perror("recv()");
 		close(server_fd);
 		close(new_socket);
 		exit(EXIT_FAILURE);
@@ -80,6 +82,26 @@ int	main() {
 	std::cout << "-----------リクエストメッセージ-----------" << std::endl;
 	std::cout << str << std::endl;
 	std::cout << "---------------------------------------" << std::endl;
+
+	// 下記のような形式にしないとクライアントはメッセージを認識できない
+	std::ostringstream	oss;
+	oss << "content-length: " << (str.length() + 2) << "\r\n";
+	std::string response;
+	response += "HTTP/1.1 200 OK\r\n";
+	response += "Content-Type: text/plain\r\n";
+	response += oss.str();
+	response += "\r\n";
+	response += str + "\r\n";
+
+	// send()はrecv()の反対でクライアントにメッセージを送信できる
+	ret = send(new_socket, response.c_str(), response.length(), 0);
+	if (ret < 0) {
+		perror("send()");
+		close(server_fd);
+		close(new_socket);
+		exit(EXIT_FAILURE);
+	}
+	std::cout << "\"Hello,world!\" message sent to client." << std::endl;
 
 	// 作成したfdをcloseする
 	close(server_fd);

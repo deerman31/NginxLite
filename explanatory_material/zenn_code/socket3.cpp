@@ -3,8 +3,7 @@
 #include <unistd.h>
 #include <cstring>
 #include <iostream>
-// fcntlを使うために必要
-#include <fcntl.h>
+#include <sstream>
 
 #define BUF_SIZE 1024
 #define PORT_NUM 8080
@@ -44,25 +43,15 @@ int	main() {
 		exit(EXIT_FAILURE);
 	}
 
-	// fcntlを使って、server_fdをノンブロッキングに設定
-	if (fcntl(server_fd, F_SETFL, O_NONBLOCK) < 0) {
-		perror("fcntl()");
-		close(server_fd);
-		exit(EXIT_FAILURE);
-	}
-
+	// 無限ループの中で処理できるように変更
 	size_t count = 1;
 	while (true) {
-		std::cout << "accept()の前\n";
-		// 本来ここでブロッキングが起こるが、ノンブロッキングに設定しているため、関数が即座に-1を返す
 		new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
 		if (new_socket < 0) {
-			std::cout << "server_fdをノンブロッキングに設定しているため、accept()でブロッキングされずに-1を即座に返す" << std::endl;
 			perror("accept()");
 			close(server_fd);
 			exit(EXIT_FAILURE);
 		}
-		std::cout << "accept()の後\n";
 		ssize_t ret = recv(new_socket, buf, (BUF_SIZE - 1), 0);
 		if (ret < 0) {
 			perror("recv()");
@@ -78,12 +67,14 @@ int	main() {
 		std::cout << str << std::endl;
 		std::cout << "---------------------------------------" << std::endl;
 
-		std::string response(
-			"HTTP/1.1 200 OK\r\n"
-			"Content-Type: text/plain\r\n"
-			"Content-Length: 14\r\n"
-			"\r\n"
-			"Hello,world!\r\n");
+		std::ostringstream	oss;
+		oss << "content-length: " << (str.length() + 2) << "\r\n";
+		std::string response;
+		response += "HTTP/1.1 200 OK\r\n";
+		response += "Content-Type: text/plain\r\n";
+		response += oss.str();
+		response += "\r\n";
+		response += str + "\r\n";
 
 		ret = send(new_socket, response.c_str(), response.length(), 0);
 		if (ret < 0) {
@@ -93,6 +84,7 @@ int	main() {
 			exit(EXIT_FAILURE);
 		}
 		std::cout << "\"Hello,world!\" message sent to client." << std::endl;
+		close(new_socket);
 		count += 1;
 	}
 	close(server_fd);
