@@ -25,7 +25,7 @@ This project involves writing a custom HTTP server, inspired by Nginx, using C++
 
 ```bash
 make
-./webserv [configuration_file]
+./NginxLite [configuration_file]
 ```
 
 ### Configuration File

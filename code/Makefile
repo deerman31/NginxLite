@@ -1,4 +1,4 @@
-NAME		:=	webserv
+NAME		:=	NginxLite
 OBJ_DIR		:=	obj
 SRC_DIR		:=	srcs
 INC_DIR		:=	includes
