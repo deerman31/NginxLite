@@ -46,10 +46,3 @@ The configuration file allows you to:
 - Tested against Nginx for HTTP 1.1 compliance
 - Includes stress tests to ensure server availability
 
-### Disclaimer
-
-This project is for educational purposes and may not be suitable for production environments without further development and security auditing.
-
----
-
-For more detailed information about the project requirements and implementation details, please refer to the subject document.
